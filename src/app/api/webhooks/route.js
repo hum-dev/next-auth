@@ -50,39 +50,34 @@ export async function POST(req) {
   // Do something with payload
   // For this guide, log payload to console
   const { id } = evt?.data
-  const eventType = evt?.type
-  console.log(`Received webhook with ID ${id} and event type of ${eventType}`)
-  console.log('Webhook payload:', body)
+  const eventType = evt?.type;
+console.log(`Received webhook with ID ${id} and event type of ${eventType}`);
+console.log('Webhook payload:', body);
 
-  if (eventType === 'user.created' || eventType === 'user.updated') {
-    const {id, first_name, last_name, image_url, email_addresses, username} = evt?.data;
-    try {
-      await createOrUpdateUser (id, first_name, last_name, image_url, email_addresses, username);
-      return new Response('User created or updated', { status: 200 })
-    } catch (error) {
-      console.log('error creating or updating user:', error);
-      return new Response('Error: Could not create or update user', {
-        status: 400,
-      })
-      
-    }
-   
-    
+if (eventType === 'user.created' || eventType === 'user.updated') {
+  const {id, first_name, last_name, image_url, email_addresses, username} = evt?.data;
+  try {
+    await createOrUpdateUser(id, first_name, last_name, image_url, email_addresses, username);
+    return new Response('User created or updated', { status: 200 });
+  } catch (error) {
+    console.log('error creating or updating user:', error);
+    return new Response('Error: Could not create or update user', {
+      status: 400,
+    });
   }
-  if (eventType === 'user.deleted') {
-    const {id} = evt?.data;
-    try {
-      await deleteUser(id);
-      return new Response('User deleted', { status: 200 })
-    } catch (error) {
-      console.log('error deleting user:', error);
-      return new Response('Error: Could not delete user', {
-        status: 400,
-      })
-    
-  }
-
-
-
-  return new Response('Webhook received', { status: 200 })
 }
+
+if (eventType === 'user.deleted') {
+  const {id} = evt?.data;
+  try {
+    await deleteUser(id);
+    return new Response('User deleted', { status: 200 });
+  } catch (error) {
+    console.log('error deleting user:', error);
+    return new Response('Error: Could not delete user', {
+      status: 400,
+    });
+  }
+}
+
+return new Response('Webhook received', { status: 200 });
